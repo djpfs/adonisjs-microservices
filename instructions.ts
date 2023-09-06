@@ -18,6 +18,30 @@ function makeConfig(projectRoot: string, app: ApplicationContract, sink: typeof 
   sink.logger.action('create').succeeded(configPath)
 }
 
+function makeDecorator(projectRoot: string, app: ApplicationContract, sink: typeof sinkStatic) {
+  const configPath = app.makePath('app/Decorators/MsMessage.ts')
+  const kafkaConfig = new sink.files.MustacheFile(projectRoot, configPath, getStub('decorator.txt'))
+
+  if (kafkaConfig.exists()) {
+    sink.logger.action('skip').succeeded(configPath)
+    return
+  }
+  kafkaConfig.commit()
+  sink.logger.action('create').succeeded(configPath)
+}
+
+function makeHelper(projectRoot: string, app: ApplicationContract, sink: typeof sinkStatic) {
+  const configPath = app.makePath('app/Helpers/Types/Microservice.ts')
+  const kafkaConfig = new sink.files.MustacheFile(projectRoot, configPath, getStub('helper.txt'))
+
+  if (kafkaConfig.exists()) {
+    sink.logger.action('skip').succeeded(configPath)
+    return
+  }
+  kafkaConfig.commit()
+  sink.logger.action('create').succeeded(configPath)
+}
+
 function makeContract(projectRoot: string, app: ApplicationContract, sink: typeof sinkStatic) {
   const contractsPath = app.makePath('contracts/microservices.ts')
   const kafkaContract = new sink.files.MustacheFile(
@@ -55,4 +79,6 @@ export default async function instructions(
   makeConfig(projectRoot, app, sink)
   makeContract(projectRoot, app, sink)
   makeProvider(projectRoot, app, sink)
+  makeDecorator(projectRoot, app, sink)
+  makeHelper(projectRoot, app, sink)
 }

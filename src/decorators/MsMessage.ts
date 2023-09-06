@@ -1,6 +1,6 @@
 import Ms, { TransportMethods } from '@ioc:Microservice/Transports'
 
-export default function Message(topic: string) {
+export default function MsMessage(topic: string) {
   return function (_target: any, _propertyKey: string, descriptor: PropertyDescriptor) {
     const originalMethod = descriptor.value
     const splitedTopic = topic.split('.')

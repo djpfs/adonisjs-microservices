@@ -1,8 +1,8 @@
 import type { ApplicationContract } from '@ioc:Adonis/Core/Application'
-import path from 'path'
-import fs from 'fs'
 import MicroserviceTransports from '../transports'
 import { KafkaTransportConfig } from '../config/microservices'
+import path from 'path'
+import  { readdir } from 'fs/promises'
 
 export default class MicroserviceProvider {
   constructor(protected app: ApplicationContract) {}
@@ -15,12 +15,16 @@ export default class MicroserviceProvider {
   }
 
   public async boot(): Promise<void> {
-    const controllersPath = path.join(this.app.appRoot, 'app/Controllers')
-    let files = fs.readdirSync(controllersPath, { withFileTypes: true })
-    files = files.filter((file) => file.isFile() && file.name.endsWith('.ts'))
+    const walk = async (dirPath) => Promise.all(
+      await readdir(dirPath, { withFileTypes: true }).then((entries) => entries.map((entry) => {
+        const childPath = path.join(dirPath, entry.name)
+        return entry.isDirectory() ? walk(childPath) : childPath
+      })),
+    )
+    const files = await walk(path.join(this.app.appRoot, 'app/Controllers'))
     for (const file of files) {
       // eslint-disable-next-line @typescript-eslint/no-var-requires
-      const Controller = require(`${file.name}`).default
+      const Controller = require(`${file}`).default
       new Controller()
     }
   }
