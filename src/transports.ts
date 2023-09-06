@@ -1,7 +1,7 @@
 import { TransportMethods, TransportsContract } from '@ioc:Microservice/Transports'
 import MicroserviceTransportBase from './transports/base'
 import KafkaTransport from './transports/kafka'
-import {  KafkaTransportConfig } from './config/kafka'
+import {  KafkaTransportConfig } from './config/microservices'
 
 export default class MicroserviceTransports implements TransportsContract {
   public readonly transports: MicroserviceTransportBase[] = []

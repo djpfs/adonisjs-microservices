@@ -1,11 +1,11 @@
-import { KafkaConfig, SASLOptions, logLevel } from 'kafkajs'
+import { KafkaConfig as kakfkaOriginalConfig, SASLOptions, logLevel } from 'kafkajs'
 import Env from '@ioc:Adonis/Core/Env'
 
-export interface KafkaTransportConfig extends KafkaConfig {
+export interface KafkaTransportConfig extends kakfkaOriginalConfig {
   groupId: string
 }
 
-const kafkaConfig: KafkaTransportConfig = {
+export const kafkaConfig: KafkaTransportConfig = {
   clientId: Env.get('KAFKA_CLIENT_ID'),
   groupId: Env.get('KAFKA_GROUP_ID'),
   brokers: Env.get('KAFKA_BROKERS')?.split(',') || ['localhost:9092'],
@@ -20,6 +20,3 @@ const kafkaConfig: KafkaTransportConfig = {
       : undefined,
   logLevel: Env.get('KAFKA_LOG_LEVEL') || logLevel.ERROR,
 }
-
-export default kafkaConfig
-export type { kafkaConfig }
