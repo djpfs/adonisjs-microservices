@@ -12,7 +12,8 @@ class MicroserviceProvider {
     }
     register() {
         this.app.container.singleton('Microservice/Transports', () => {
-            return new transports_1.default(['kafka']);
+            const kafkaConfig = require('../config/kafka').default;
+            return new transports_1.default(['kafka'], kafkaConfig);
         });
     }
     async boot() {

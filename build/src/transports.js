@@ -3,16 +3,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const kafka_1 = __importDefault(require("./config/kafka"));
-const kafka_2 = __importDefault(require("./transports/kafka"));
+const kafka_1 = __importDefault(require("./transports/kafka"));
 class MicroserviceTransports {
-    constructor(transports) {
+    constructor(transports, kafkaConfig) {
         this.transports = [];
         this.isConnected = false;
         transports.forEach((transport) => {
             switch (transport) {
                 case 'kafka':
-                    this.transports.push(new kafka_2.default(kafka_1.default));
+                    if (!kafkaConfig)
+                        throw new Error('Kafka config not provided');
+                    this.transports.push(new kafka_1.default(kafkaConfig));
                     break;
                 default:
                     throw new Error(`Transport ${transport} not implemented`);

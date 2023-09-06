@@ -1,24 +1,25 @@
 import type { ApplicationContract } from '@ioc:Adonis/Core/Application'
 import path from 'path'
 import fs from 'fs'
-import MicroserviceTransports from '@djpfs/adonisjs-microservices/transports'
+import MicroserviceTransports from '@djpfs/adonisjs-microservices/src/transports'
 
 export default class MicroserviceProvider {
   constructor(protected app: ApplicationContract) {}
 
   public register(): void {
     this.app.container.singleton('Microservice/Transports', () => {
-      return new MicroserviceTransports(['kafka'])
+      const kafkaConfig =  require('../config/kafka').default
+      return new MicroserviceTransports(['kafka'], kafkaConfig )
     })
   }
 
   public async boot(): Promise<void> {
     const controllersPath = path.join(this.app.appRoot, 'app/Controllers')
-    let files = fs.readdirSync(controllersPath, { withFileTypes: true, recursive: true })
+    let files = fs.readdirSync(controllersPath, { withFileTypes: true })
     files = files.filter((file) => file.isFile() && file.name.endsWith('.ts'))
     for (const file of files) {
       // eslint-disable-next-line @typescript-eslint/no-var-requires
-      const Controller = require(`${file.path}/${file.name}`).default
+      const Controller = require(`${file.name}`).default
       new Controller()
     }
   }

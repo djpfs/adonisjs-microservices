@@ -1,16 +1,18 @@
 import { TransportMethods, TransportsContract } from '@ioc:Microservice/Transports'
-import kafkaConfig from './config/kafka'
 import MicroserviceTransportBase from './transports/base'
 import KafkaTransport from './transports/kafka'
+import {  KafkaTransportConfig } from './config/kafka'
 
 export default class MicroserviceTransports implements TransportsContract {
   public readonly transports: MicroserviceTransportBase[] = []
   public isConnected = false
 
-  constructor(transports: TransportMethods[]) {
+
+  constructor(transports: TransportMethods[], kafkaConfig?: KafkaTransportConfig) {
     transports.forEach((transport) => {
       switch (transport) {
         case 'kafka':
+          if (!kafkaConfig) throw new Error('Kafka config not provided')
           this.transports.push(new KafkaTransport(kafkaConfig))
           break
         default:

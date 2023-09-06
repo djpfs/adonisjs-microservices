@@ -99,7 +99,7 @@
     "instructionsMd": "./build/instructions.md",
     "types": "@djpfs/adonisjs-microservices/build/adonis-typings",
     "providers": [
-      "./microservices/providers/MicroserviceProvider"
+      "./providers/MicroserviceProvider"
     ]
   }
 }

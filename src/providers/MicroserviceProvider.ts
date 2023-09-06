@@ -8,7 +8,8 @@ export default class MicroserviceProvider {
 
   public register(): void {
     this.app.container.singleton('Microservice/Transports', () => {
-      return new MicroserviceTransports(['kafka'])
+      const kafkaConfig =  require('../config/kafka').default
+      return new MicroserviceTransports(['kafka'], kafkaConfig )
     })
   }
 
