@@ -1,8 +1,8 @@
 import type { ApplicationContract } from '@ioc:Adonis/Core/Application'
+import { MicroserviceTransports } from '@ioc:Microservice/Transports'
+import { KafkaTransportConfig } from 'Config/microservices'
 import path from 'path'
 import fs from 'fs'
-import MicroserviceTransports from '@djpfs/adonisjs-microservices/build/src/transports'
-import { KafkaTransportConfig } from 'Config/microservices'
 
 export default class MicroserviceProvider {
   constructor(protected app: ApplicationContract) {}
@@ -10,6 +10,7 @@ export default class MicroserviceProvider {
   public register(): void {
     this.app.container.singleton('Microservice/Transports', () => {
       const { kafkaConfig } =  require('../config/kafka')
+      MicroserviceTransports
       return new MicroserviceTransports(['kafka'], kafkaConfig as KafkaTransportConfig )
     })
   }
