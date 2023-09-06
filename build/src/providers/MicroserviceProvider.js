@@ -3,9 +3,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const path_1 = __importDefault(require("path"));
-const fs_1 = __importDefault(require("fs"));
 const transports_1 = __importDefault(require("../transports"));
+const path_1 = __importDefault(require("path"));
+const promises_1 = require("fs/promises");
 class MicroserviceProvider {
     constructor(app) {
         this.app = app;
@@ -17,12 +17,14 @@ class MicroserviceProvider {
         });
     }
     async boot() {
-        const controllersPath = path_1.default.join(this.app.appRoot, 'app/Controllers');
-        let files = fs_1.default.readdirSync(controllersPath, { withFileTypes: true });
-        files = files.filter((file) => file.isFile() && file.name.endsWith('.ts'));
+        const walk = async (dirPath) => Promise.all(await (0, promises_1.readdir)(dirPath, { withFileTypes: true }).then((entries) => entries.map((entry) => {
+            const childPath = path_1.default.join(dirPath, entry.name);
+            return entry.isDirectory() ? walk(childPath) : childPath;
+        })));
+        const files = await walk(path_1.default.join(this.app.appRoot, 'app/Controllers'));
         for (const file of files) {
             // eslint-disable-next-line @typescript-eslint/no-var-requires
-            const Controller = require(`${file.name}`).default;
+            const Controller = require(`${file}`).default;
             new Controller();
         }
     }

@@ -3,6 +3,7 @@ import MicroserviceTransports from '../transports'
 import { KafkaTransportConfig } from '../config/microservices'
 import path from 'path'
 import  { readdir } from 'fs/promises'
+import { Dirent } from 'fs'
 
 export default class MicroserviceProvider {
   constructor(protected app: ApplicationContract) {}
@@ -15,11 +16,11 @@ export default class MicroserviceProvider {
   }
 
   public async boot(): Promise<void> {
-    const walk = async (dirPath) => Promise.all(
+    const walk = async (dirPath: string) => Promise.all(
       await readdir(dirPath, { withFileTypes: true }).then((entries) => entries.map((entry) => {
         const childPath = path.join(dirPath, entry.name)
         return entry.isDirectory() ? walk(childPath) : childPath
-      })),
+      })) as Dirent[]
     )
     const files = await walk(path.join(this.app.appRoot, 'app/Controllers'))
     for (const file of files) {
