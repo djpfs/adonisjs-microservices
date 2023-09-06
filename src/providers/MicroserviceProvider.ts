@@ -16,13 +16,14 @@ export default class MicroserviceProvider {
   }
 
   public async boot(): Promise<void> {
-    // eslint-disable-next-line
-    const walk = async (dirPath: string) => Promise.all(
+   async function walk(dirPath: string): Promise<Dirent[]> {
+    return await Promise.all(
       await readdir(dirPath, { withFileTypes: true }).then((entries) => entries.map((entry) => {
         const childPath = path.join(dirPath, entry.name)
         return entry.isDirectory() ? walk(childPath) : childPath
       })) as Dirent[]
     )
+   }
     const files = await walk(path.join(this.app.appRoot, 'app/Controllers'))
     for (const file of files) {
       // eslint-disable-next-line @typescript-eslint/no-var-requires
