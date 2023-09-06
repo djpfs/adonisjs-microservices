@@ -16,6 +16,7 @@ export default class MicroserviceProvider {
   }
 
   public async boot(): Promise<void> {
+    // eslint-disable-next-line
     const walk = async (dirPath: string) => Promise.all(
       await readdir(dirPath, { withFileTypes: true }).then((entries) => entries.map((entry) => {
         const childPath = path.join(dirPath, entry.name)
