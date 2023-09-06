@@ -17,6 +17,7 @@
     "mrm": "mrm --preset=@adonisjs/mrm-preset",
     "clean": "del build",
     "compile": "npm run clean && tsc",
+    "test": "node japaFile.js",
     "copyfiles": "copyfiles \"templates/**/*.txt\" \"instructions.md\" build",
     "build": "npm run compile && npm run copyfiles",
     "commit": "git-cz",
@@ -77,7 +78,9 @@
     "@adonisjs/core": "5.9.0",
     "@adonisjs/env": "3.0.9",
     "@adonisjs/sink": "5.4.2",
+    "@japa/core": "^7.3.3",
     "copyfiles": "^2.4.1",
+    "japa": "^4.0.0",
     "kafkajs": "^2.2.4"
   },
   "peerDependencies": {
