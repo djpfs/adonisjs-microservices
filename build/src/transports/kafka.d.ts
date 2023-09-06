@@ -1,5 +1,5 @@
 import { Consumer, Producer, Kafka, Admin, Logger } from 'kafkajs';
-import { KafkaTransportConfig } from '../config/kafka';
+import { KafkaTransportConfig } from '../config/microservices';
 import { TransportMethods } from '@ioc:Microservice/Transports';
 import MicroserviceTransportBase from './base';
 export interface KafkaPayload {
