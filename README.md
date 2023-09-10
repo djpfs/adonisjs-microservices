@@ -1,29 +1,33 @@
-<h1>Adonis Microservices Communication Package</h1>
+# Adonis Microservices Communication Package
 
-Este pacote é projetado para simplificar a comunicação entre microserviços em sua aplicação Adonis. Atualmente, ele suporta a integração com o Apache Kafka e está planejado para adicionar suporte a outros sistemas de mensagens, como RabbitMQ e gRPC no futuro.
+This package is designed to simplify communication between microservices in your Adonis application. Currently, it supports integration with Apache Kafka and plans to add support for other messaging systems such as RabbitMQ and gRPC in the future.
 
-<h2>Instalação</h2>
-Você pode instalar este pacote via npm:
+## Installation
+
+You can install this package via npm with the following command:
 
 ```bash
 npm i @djpfs/adonisjs-microservices
 ```
 
-Após a instalação, execute o seguinte comando para configurar o pacote:
+After installation, execute the following command to configure the package:
+
 ```bash
 node ace configure @djpfs/adonisjs-microservices
 ```
-Este comando irá configurar os arquivos necessários para o funcionamento do pacote no seu projeto.
 
+This command will set up the necessary files for the package to function in your project.
 
-<h2>Configurando</h2>
-Para usar o Kafka como transporte, você deve instalar o pacote `kafkajs`:
+## Configuration
 
-```bash 
+To use Kafka as the transport system, you must first install the `kafkajs` package:
+
+```bash
 npm i kafkajs
 ```
 
-Adicione as seguintes configurações ao seu arquivo `.env` substituindo os valores de acordo com o seu ambiente:
+Next, add the following configurations to your `.env` file, replacing the values according to your environment:
+
 ```bash
 KAFKA_CLIENT_ID='service-gateway'
 KAFKA_GROUP_ID='gateway'
@@ -36,8 +40,11 @@ KAFKA_SASL_PASSWORD='password'
 KAFKA_LOG_LEVEL=4
 ```
 
-<h2>Uso</h2>
-Para usar o pacote, você deve importar o `MsMessage` e o `KafkaPayload` no seu arquivo de controller e usar o decorator `MsMessage` para definir o tópico que você deseja ouvir:
+## Usage
+
+### Receiving Messages
+
+To use the package, import the `MsMessage` and `KafkaPayload` classes into your controller file. Then, use the `MsMessage` decorator to specify the topic you want to listen to:
 
 ```typescript
 import { MsMessage } from "App/Decorators/MsMessage";
@@ -52,13 +59,14 @@ export default class AuthController {
 }
 ```
 
-O decorator espera um string como parametro, que deve ter pelo menos um . (ponto) para separar o nome transporte do tópico. O nome do transporte deve ser o mesmo que você definiu no arquivo de configuração do pacote.
+The decorator expects a string as a parameter, which should contain at least one dot (.) to separate the transport name from the topic name. The transport name should match what you defined in the package configuration file.
 
-> Ex: kafka.auth.login, onde "kakfa" é o nome do transporte e "auth.login" é o nome do tópico
+For example, `kafka.auth.login`, where "kafka" is the transport name, and "auth.login" is the topic name.
 
-<h2>Enviando mensagens</h2>
+### Sending Messages
 
-Para enviar mensagens, você deve importar o `Transports` e o `KafkaTransport` no seu arquivo de controller e usar o método `send` do transport para enviar a mensagem:
+To send messages, import the `Transports` and `KafkaTransport` classes into your controller file. Then, use the `send` method of the transport to send the message:
+
 ```typescript
 import Transports from "@ioc:Microservice/Transports";
 import KafkaTransport from '@djpfs/adonisjs-microservices/build/src/transports/kafka'
@@ -77,6 +85,6 @@ export default class AuthController {
 }
 ```
 
-<h2>Configurações avançadas</h2>
+## Advanced Configuration
 
-Você pode configurar o kafka com todas as configurações disponíveis no pacote `kafkajs` editando as configurações no arquivo `config/microservices.ts`:
+You can configure Kafka with all available options from the `kafkajs` package by editing the settings in the `config/microservices.ts` file.
