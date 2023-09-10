@@ -75,3 +75,8 @@ export default class AuthController {
     })
   }
 }
+```
+
+<h2>Configurações avançadas</h2>
+
+Você pode configurar o kafka com todas as configurações disponíveis no pacote `kafkajs` editando as configurações no arquivo `config/microservices.ts`:
