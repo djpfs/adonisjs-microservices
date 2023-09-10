@@ -17,11 +17,12 @@ class MicroserviceProvider {
         });
     }
     async boot() {
-        // eslint-disable-next-line
-        const walk = async (dirPath) => Promise.all(await (0, promises_1.readdir)(dirPath, { withFileTypes: true }).then((entries) => entries.map((entry) => {
-            const childPath = path_1.default.join(dirPath, entry.name);
-            return entry.isDirectory() ? walk(childPath) : childPath;
-        })));
+        async function walk(dirPath) {
+            return await Promise.all(await (0, promises_1.readdir)(dirPath, { withFileTypes: true }).then((entries) => entries.map((entry) => {
+                const childPath = path_1.default.join(dirPath, entry.name);
+                return entry.isDirectory() ? walk(childPath) : childPath;
+            })));
+        }
         const files = await walk(path_1.default.join(this.app.appRoot, 'app/Controllers'));
         for (const file of files) {
             // eslint-disable-next-line @typescript-eslint/no-var-requires
